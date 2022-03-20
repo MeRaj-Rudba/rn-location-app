@@ -8,11 +8,15 @@ import {
   TextInput,
 } from "react-native";
 import { useDispatch } from "react-redux";
+import * as ImagePicker from "expo-image-picker";
 import Colors from "../constants/Colors";
 import * as placeActions from "../store/places-action";
+import ImageSelector from "../components/ImageSelector";
+import LocationPicker from "../components/LocationPicker";
 
 const NewPlaceScreen = (props) => {
   const [titleValue, setTitleValue] = useState("");
+  const [selectedImage, setSelectedImage] = useState();
   const titleChangeHandler = (text) => {
     setTitleValue(text);
   };
@@ -25,8 +29,11 @@ const NewPlaceScreen = (props) => {
   }, [navigation]);
 
   const savePlaceHandler = () => {
-    dispatch(placeActions.addPlace(titleValue));
+    dispatch(placeActions.addPlace(titleValue, selectedImage));
     navigation.goBack();
+  };
+  const imageTakenHandler = (imagePath) => {
+    setSelectedImage(imagePath);
   };
 
   return (
@@ -38,6 +45,8 @@ const NewPlaceScreen = (props) => {
           onChangeText={titleChangeHandler}
           value={titleValue}
         />
+        <ImageSelector onImageTaken={imageTakenHandler} />
+        <LocationPicker />
         <Button
           title="Save Place"
           color={Colors.primary}
